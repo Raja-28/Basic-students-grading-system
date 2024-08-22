@@ -1,0 +1,77 @@
+<html>
+<head>
+<title>Student Rank List</title>
+</head>
+<body>
+<h1>Student Rank List</h1>
+<form>
+<label for="numStudents">Enter the number of students:</label>
+<input type="number" id="numStudents" name="numStudents"><br><br>
+<button type="button" onclick="submitStudents()">Submit</button>
+</form>
+<div id="studentDetails"></div>
+<div id="rankList"></div>
+<script>
+function submitStudents() {
+var numStudents = document.getElementById('numStudents').value;
+var studentDetails = document.getElementById('studentDetails');
+studentDetails.innerHTML = '';
+for (let i = 1; i <= numStudents; i++) {
+studentDetails.innerHTML += `
+<h3>Student ${i} Name:</h3>
+<input type="text" id="name${i}" name="name${i}"><br>
+<h3>Marks:</h3>
+<input type="number" id="marks${i}_1" name="marks${i}_1"><br>
+<input type="number" id="marks${i}_2" name="marks${i}_2"><br>
+<input type="number" id="marks${i}_3" name="marks${i}_3"><br>
+<input type="number" id="marks${i}_4" name="marks${i}_4"><br>
+<input type="number" id="marks${i}_5" name="marks${i}_5"><br><br>
+`;
+}
+studentDetails.innerHTML += `<button type="button" onclick="calculateRanks()">Calculate Ranks</button>`;
+}
+function calculateRanks() {
+let numStudents = document.getElementById('numStudents').value;
+let students = [];
+for (let i = 1; i <= numStudents; i++) {
+let name = document.getElementById(`name${i}`).value;
+let marks = [
+parseInt(document.getElementById(`marks${i}_1`).value),
+parseInt(document.getElementById(`marks${i}_2`).value),
+parseInt(document.getElementById(`marks${i}_3`).value),
+parseInt(document.getElementById(`marks${i}_4`).value),
+parseInt(document.getElementById(`marks${i}_5`).value)
+];
+let total = marks.reduce((a, b) => a + b, 0);
+let average = total / marks.length;
+students.push({ name, total, average });
+}
+students.sort((a, b) => b.total - a.total);
+let rankList = document.getElementById('rankList');
+rankList.innerHTML = `
+<h2>Rank List</h2>
+<table border="1">
+<tr>
+<th>Rank</th>
+<th>Name</th>
+<th>Total</th>
+<th>Average</th>      
+`;
+students.forEach((student, index) => {
+rankList.innerHTML += `
+<table border="1">
+<tr>
+<td>${index + 1}</td>
+<td>${student.name}</td>
+<td>${student.total}</td>
+<td>${student.average.toFixed(2)}</td>
+</tr>
+<br>
+</tr>
+`;
+});
+rankList.innerHTML += `</table>`;
+}
+</script>
+</body>
+</html>
